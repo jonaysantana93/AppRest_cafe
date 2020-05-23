@@ -18,7 +18,7 @@ let urlDB;
 if (process.env.NODE_ENV === 'dev') {
     urlDB = 'mongodb://127.0.0.1/cafe';
 } else {
-    urlDB = 'mongodb+srv://cafe-user:FGTEERTZEaC7qRVI@cluster0-jksag.mongodb.net/cafe';
+    urlDB = process.env.MONGO_URI;
 }
 
 process.env.URLDB = urlDB;
