@@ -1,10 +1,11 @@
 const express = require('express');
-const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt');
+const Usuario = require('../models/usuario');
+const { VerificaToken, VerificaAdminRole } = require('../middlewares/autenticacion');
 const _ = require('underscore');
 const app = express();
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', VerificaToken, (req, res) => {
 
     let desde = Number(req.query.desde || 0);
     let limite = Number(req.query.limite || 5);
@@ -25,7 +26,7 @@ app.get('/usuario', function(req, res) {
                 });
             }
 
-            Usuario.count(EstadoUsu, (err, conteo) => {
+            Usuario.countDocuments(EstadoUsu, (err, conteo) => {
                 res.json({
                     ok: true,
                     usuarios,
@@ -36,7 +37,7 @@ app.get('/usuario', function(req, res) {
 
 });
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [VerificaToken, VerificaAdminRole], function(req, res) {
     let body = req.body;
 
     let usuario = new Usuario({
@@ -64,7 +65,7 @@ app.post('/usuario', function(req, res) {
 
 });
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [VerificaToken, VerificaAdminRole], function(req, res) {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -83,7 +84,7 @@ app.put('/usuario/:id', function(req, res) {
     });
 });
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [VerificaToken, VerificaAdminRole], function(req, res) {
     // vamos a eliminar fisicamente el usuarioo de base de datos y la otra opcion es cambiar el estado
     let id = req.params.id;
 

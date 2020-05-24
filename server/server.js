@@ -7,17 +7,11 @@ const app = express();
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
-/*
-    //Credenciales usuario para base de datos MLab
-    user = strider
-    password = 2GCiQDgIE1P4EzoM
-
-    mongodb+srv://strider:2GCiQDgIE1P4EzoM@cluster0-jksag.mongodb.net/cafe
-*/
-
 // parse application/json
 app.use(bodyParser.json())
-app.use(require('./routes/usuario'));
+
+//configuracion global de rutas
+app.use(require('./routes/index'));
 
 mongoose.connect(process.env.URLDB, {
     useNewUrlParser: true,
